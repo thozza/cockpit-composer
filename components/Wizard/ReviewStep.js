@@ -27,6 +27,9 @@ const ariaLabels = defineMessages({
   azure: {
     defaultMessage: "Azure help",
   },
+  gcp: {
+    defaultMessage: "GCP help",
+  },
   vmware: {
     defaultMessage: "VMWare help",
   },
@@ -237,6 +240,46 @@ class ReviewStep extends React.PureComponent {
       </TextContent>
     );
 
+    const gcpReviewStep = uploadService === "gcp" && (
+      <TextContent id="gcp-content">
+        <div className="pf-l-flex pf-u-display-flex">
+          <h3 className="pf-l-flex__item pf-u-mt-2xl pf-u-mb-md">
+            <FormattedMessage defaultMessage="Upload to GCP" />
+          </h3>
+          <Popover
+            className="pf-l-flex__item"
+            id="gcp-review-popover"
+            bodyContent={
+              <FormattedMessage
+                defaultMessage="
+                  Image Builder can import images you create to Google Compute Engine. When the image build is complete
+                  and the upload action is successful, the image will be available as a custom GCE image in your GCP project."
+              />
+            }
+            aria-label={formatMessage(ariaLabels.gcp)}
+          >
+            <Button variant="plain" aria-label={formatMessage(ariaLabels.gcp)}>
+              <OutlinedQuestionCircleIcon id="popover-icon" />
+            </Button>
+          </Popover>
+        </div>
+        <TextList className="cc-m-column__fixed-width" component={TextListVariants.dl}>
+          <TextListItem component={TextListItemVariants.dt}>
+            <FormattedMessage defaultMessage="Image name" />
+          </TextListItem>
+          <TextListItem component={TextListItemVariants.dd}>{imageName}</TextListItem>
+          <TextListItem component={TextListItemVariants.dt}>
+            <FormattedMessage defaultMessage="Storage Bucket" />
+          </TextListItem>
+          <TextListItem component={TextListItemVariants.dd}>{uploadSettings.bucket}</TextListItem>
+          <TextListItem component={TextListItemVariants.dt}>
+            <FormattedMessage defaultMessage="Storage Region" />
+          </TextListItem>
+          <TextListItem component={TextListItemVariants.dd}>{uploadSettings.region}</TextListItem>
+        </TextList>
+      </TextContent>
+    );
+
     const vmwareReviewStep = uploadService === "vmware" && (
       <TextContent id="vmware-content">
         <div className="pf-l-flex pf-u-display-flex">
@@ -350,6 +393,7 @@ class ReviewStep extends React.PureComponent {
         </TextContent>
         {awsReviewStep}
         {azureReviewStep}
+        {gcpReviewStep}
         {vmwareReviewStep}
       </>
     );

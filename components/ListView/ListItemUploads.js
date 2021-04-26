@@ -53,6 +53,7 @@ class ListItemUploads extends React.PureComponent {
     const uploadTypeLabels = {
       aws: "AWS",
       azure: "Azure",
+      gcp: "GCP",
       vmware: "VMWare",
     };
     return uploadTypeLabels[uploadType] !== undefined ? uploadTypeLabels[uploadType] : uploadType;

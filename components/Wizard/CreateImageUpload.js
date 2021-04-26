@@ -11,6 +11,7 @@ import AWSAuthStep from "./AWSAuthStep";
 import AWSDestinationStep from "./AWSDestinationStep";
 import AzureAuthStep from "./AzureAuthStep";
 import AzureDestinationStep from "./AzureDestinationStep";
+import GCPDestinationStep from "./GCPDestinationStep";
 import VMWareAuthStep from "./VMWareAuthStep";
 import VMWareDestinationStep from "./VMWareDestinationStep";
 import ReviewStep from "./ReviewStep";
@@ -68,6 +69,7 @@ class CreateImageUploadModal extends React.Component {
       },
       showUploadAwsStep: false,
       showUploadAzureStep: false,
+      showUploadGcpStep: false,
       showReviewStep: false,
       uploadService: "",
       uploadSettings: {},
@@ -116,6 +118,7 @@ class CreateImageUploadModal extends React.Component {
         uploadService: "",
         showUploadAwsStep: false,
         showUploadAzureStep: false,
+        showUploadGcpStep: false,
         showReviewStep: false,
       });
     } else {
@@ -142,6 +145,17 @@ class CreateImageUploadModal extends React.Component {
               container: "",
             },
             showUploadAzureStep: true,
+            showReviewStep: true,
+          });
+          break;
+        case "gcp":
+          this.setState({
+            uploadService,
+            uploadSettings: {
+              bucket: "",
+              region: "",
+            },
+            showUploadGcpStep: true,
             showReviewStep: true,
           });
           break;
@@ -364,7 +378,7 @@ class CreateImageUploadModal extends React.Component {
 
   render() {
     const { formatMessage } = this.props.intl;
-    const { showUploadAwsStep, showUploadAzureStep, showUploadVMWareStep, showReviewStep, uploadService } = this.state;
+    const { showUploadAwsStep, showUploadAzureStep, showUploadGcpStep, showUploadVMWareStep, showReviewStep, uploadService } = this.state;
 
     const imageStep = {
       name: <FormattedMessage defaultMessage="Image type" />,
@@ -438,6 +452,23 @@ class CreateImageUploadModal extends React.Component {
       steps: [azureUploadAuth, azureUploadDest],
     };
 
+    const gcpUploadDest = {
+      name: <FormattedMessage defaultMessage="Destination" />,
+      component: (
+        <GCPDestinationStep
+          imageName={this.state.imageName}
+          uploadSettings={this.state.uploadSettings}
+          setImageName={this.setImageName}
+          setUploadSettings={this.setUploadSettings}
+        />
+      ),
+    };
+
+    const gcpUploadStep = {
+      name: <FormattedMessage defaultMessage="Upload to GCP" />,
+      steps: [gcpUploadDest],
+    };
+
     const vmwareUploadAuth = {
       name: <FormattedMessage defaultMessage="Authentication" />,
       component: (
@@ -483,6 +514,7 @@ class CreateImageUploadModal extends React.Component {
       imageStep,
       ...(showUploadAwsStep ? [awsUploadStep] : []),
       ...(showUploadAzureStep ? [azureUploadStep] : []),
+      ...(showUploadGcpStep ? [gcpUploadStep] : []),
       ...(showUploadVMWareStep ? [vmwareUploadStep] : []),
       ...(showReviewStep ? [reviewStep] : []),
     ];

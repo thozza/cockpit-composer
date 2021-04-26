@@ -90,6 +90,9 @@ const messages = defineMessages({
   uploadAzure: {
     defaultMessage: "Upload to Azure",
   },
+  uploadGCP: {
+    defaultMessage: "Upload to GCP",
+  },
   uploadVMWare: {
     defaultMessage: "Upload to VMWare",
   },
@@ -361,6 +364,39 @@ class ImageStep extends React.PureComponent {
         <Checkbox
           value="azure"
           isChecked={uploadService === "azure"}
+          onChange={handleUploadService}
+          label={formatMessage(messages.uploadAzure)}
+          id="azure-checkbox"
+        />
+      </FormGroup>
+    );
+
+    const gcpProviderCheckbox = (
+      <FormGroup
+        label={<FormattedMessage defaultMessage="Upload image" />}
+        labelIcon={
+          <Popover
+            id="popover-help"
+            bodyContent={
+              <FormattedMessage
+                defaultMessage="
+                      Image Builder can import images you create to Google Compute Engine. When the image build is complete
+                      and the upload action is successful, the image will be available as a custom GCE image in your GCP project."
+              />
+            }
+            aria-label={formatMessage(ariaLabels.uploadImage)}
+          >
+            <Button variant="plain" aria-label={formatMessage(ariaLabels.uploadImage)}>
+              <OutlinedQuestionCircleIcon className="cc-c-text__align-icon" id="popover-icon" />
+            </Button>
+          </Popover>
+        }
+        fieldId="gcp-checkbox"
+        hasNoPaddingTop
+      >
+        <Checkbox
+          value="gcp"
+          isChecked={uploadService === "gcp"}
           onChange={handleUploadService}
           label={formatMessage(messages.uploadAzure)}
           id="azure-checkbox"
@@ -709,6 +745,7 @@ class ImageStep extends React.PureComponent {
           </FormGroup>
           {imageType === "ami" && awsProviderCheckbox}
           {imageType === "vhd" && azureProviderCheckbox}
+          {imageType === "gce-byos" && gcpProviderCheckbox}
           {imageType === "vmdk" && vmwareProviderCheckbox}
           {requiresImageSize(imageType) && imageSizeInput}
           {(imageType === "fedora-iot-commit" || imageType === "rhel-edge-commit") && ostreeFields}
